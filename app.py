@@ -5,10 +5,7 @@ import torch
 import torch.nn as nn
 import pickle
 
-# ============================================================================
-# LOAD MODEL AND FEATURE STATISTICS
-# ============================================================================
-
+# Define your model class (MUST match training!)
 class BinaryClassifier(nn.Module):
     def __init__(self, input_size=20, hidden_sizes=[64, 32], dropout=0.3):
         super().__init__()
@@ -25,19 +22,16 @@ class BinaryClassifier(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-# Load trained model
+# Load model and stats
 @st.cache_resource
 def load_model():
     model = BinaryClassifier(input_size=20, hidden_sizes=[64, 32], dropout=0.3)
-    # Load the trained weights
     model.load_state_dict(torch.load('model_weights.pt', map_location=torch.device('cpu')))
     model.eval()
     return model
 
-# Load feature statistics (computed from training data)
 @st.cache_data
 def load_feature_stats():
-    """Load feature statistics from training data."""
     with open('feature_stats.pkl', 'rb') as f:
         return pickle.load(f)
 
